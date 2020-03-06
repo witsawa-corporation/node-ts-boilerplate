@@ -1,7 +1,6 @@
 import { Router } from 'express'
 import jwt from 'jsonwebtoken'
 import Joi from '@hapi/joi'
-// import sendEmail from '../lib/sendEmail'
 
 const router = Router()
 const SECRET = process.env.SECRET_TOKEN || ''
