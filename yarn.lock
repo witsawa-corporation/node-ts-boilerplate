@@ -2820,6 +2820,11 @@ graphql-extensions@^0.11.0:
     apollo-server-env "^2.4.3"
     apollo-server-types "^0.3.0"
 
+graphql-scalars@^1.0.9:
+  version "1.0.9"
+  resolved "https://registry.yarnpkg.com/graphql-scalars/-/graphql-scalars-1.0.9.tgz#d354627c97807bd825fbdf49893051a3dbf5cc06"
+  integrity sha512-U2bIiy8hw1fgRHIB4AhCo9Oudlf88QXEjPVCM8W68GwUj9ZuQPmskyOIk9zt5HDc+FLy+qUEWpMZyqDbaU0plA==
+
 graphql-subscriptions@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/graphql-subscriptions/-/graphql-subscriptions-1.1.0.tgz#5f2fa4233eda44cf7570526adfcf3c16937aef11"
@@ -2853,7 +2858,7 @@ graphql-upload@^8.0.2:
     http-errors "^1.7.3"
     object-path "^0.11.4"
 
-graphql@^14.5.3, graphql@^14.6.0:
+graphql@^14.5.3:
   version "14.6.0"
   resolved "https://registry.yarnpkg.com/graphql/-/graphql-14.6.0.tgz#57822297111e874ea12f5cd4419616930cd83e49"
   integrity sha512-VKzfvHEKybTKjQVpTFrA5yUq2S9ihcZvfJAtsDBBCuV6wauPu1xl/f9ehgVf0FcEJJs4vz6ysb/ZMkGigQZseg==
