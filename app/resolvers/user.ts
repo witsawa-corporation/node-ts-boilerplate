@@ -1,7 +1,7 @@
 interface User {
   id: string
   email: string
-  password: string
+  password?: string
   firstName: string
   lastName: string
   createdAt: Date
@@ -10,7 +10,18 @@ interface User {
 
 const resolvers = {
   Query: {
-    users: (): any => [],
+    users: (): [User] => {
+      return [
+        {
+          id: '5e80a18bf28524840a840c6f',
+          email: 'hello@gmail.com',
+          firstName: 'f',
+          lastName: 'l',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      ]
+    },
   },
   Mutation: {
     login: (): string => 'xxxxxxx',
