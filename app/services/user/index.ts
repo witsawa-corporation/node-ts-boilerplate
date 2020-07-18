@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import { UserModel, UserType } from '../../models'
 import { createUserSchema, updateUserSchema, loginSchema } from './schema'
+import { RequestType } from './../../interface'
 
 const SECRET = process.env.SECRET_TOKEN || ''
 
@@ -17,13 +18,15 @@ const comparePassword = (password: string, hash: string): boolean => {
 }
 
 export const userMe = async (
-  req: Request | any,
+  req: RequestType,
   res: Response,
   next: NextFunction,
 ): Promise<void> => {
   try {
     if (req.params.id === 'me' && req.user) {
-      req.params.id = req.user._id
+      req.params.id = req?.user?._id || ''
+    } else {
+      return next(new Error(`400: INVALID_ID`))
     }
     next()
   } catch (e) {
