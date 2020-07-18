@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken'
 
 const SECRET = process.env.SECRET_TOKEN || ''
 
-function authen(
+function authentication(
   req: express.Request | any,
   res: express.Response,
   next: express.NextFunction,
@@ -18,9 +18,7 @@ function authen(
       if (err) {
         return next(err)
       }
-      req.xUser = {
-        ...user,
-      }
+      req.user = user
     })
     next()
   } else {
@@ -28,4 +26,4 @@ function authen(
   }
 }
 
-export default authen
+export default authentication
