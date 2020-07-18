@@ -10,6 +10,6 @@ export interface UserData {
 }
 
 export interface RequestType extends Request {
-  user: UserData
-  token: string
+  user?: UserData
+  token?: string
 }

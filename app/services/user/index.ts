@@ -23,10 +23,11 @@ export const userMe = async (
   next: NextFunction,
 ): Promise<void> => {
   try {
-    if (req.params.id === 'me' && req.user) {
+    if (req.params.id === 'me') {
+      if (!req?.user?._id) {
+        return next(new Error(`400: INVALID_ID`))
+      }
       req.params.id = req?.user?._id || ''
-    } else {
-      return next(new Error(`400: INVALID_ID`))
     }
     next()
   } catch (e) {
