@@ -1,10 +1,10 @@
 import express from 'express'
 import cors from 'cors'
 
-import authentication from './middlewares/authentication'
-import logErrors from './middlewares/logErrors'
-import errorHandler from './middlewares/errorHandler'
-import routes from './routes'
+import authentication from 'middlewares/authentication'
+import logErrors from 'middlewares/logErrors'
+import errorHandler from 'middlewares/errorHandler'
+import routes from 'routes'
 
 const app: express.Application = express()
 

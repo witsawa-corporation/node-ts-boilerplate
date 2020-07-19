@@ -1,26 +1,21 @@
-import express from 'express'
+import { Response, NextFunction } from 'express'
 import jwt from 'jsonwebtoken'
+import { RequestType } from 'interface'
 
 const SECRET = process.env.SECRET_TOKEN || ''
 
-function authen(
-  req: express.Request | any,
-  res: express.Response,
-  next: express.NextFunction,
-): void {
+function authentication(req: RequestType, res: Response, next: NextFunction): void {
   let token
   if (req.get('X-Access-Token')) {
     token = req.get('X-Access-Token')
   }
   if (token) {
     req.token = token
-    jwt.verify(token, SECRET, function(err: any, user: any) {
+    jwt.verify(token, SECRET, function(err, user) {
       if (err) {
         return next(err)
       }
-      req.xUser = {
-        ...user,
-      }
+      req.user = user
     })
     next()
   } else {
@@ -28,4 +23,4 @@ function authen(
   }
 }
 
-export default authen
+export default authentication
