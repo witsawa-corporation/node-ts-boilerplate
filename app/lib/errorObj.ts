@@ -1,4 +1,4 @@
-import { ErrorType } from '../interface'
+import { ErrorType } from 'interface'
 
 export const errors = (name: string, message: string, status: number): ErrorType => {
   const error: ErrorType = new Error(message)

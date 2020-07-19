@@ -1,5 +1,5 @@
 import express from 'express'
-import { ErrorType } from '../interface'
+import { ErrorType } from 'interface'
 
 function errorHandler(
   error: ErrorType,

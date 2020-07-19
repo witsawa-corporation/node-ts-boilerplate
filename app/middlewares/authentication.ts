@@ -1,6 +1,6 @@
 import { Response, NextFunction } from 'express'
 import jwt from 'jsonwebtoken'
-import { RequestType } from './../interface'
+import { RequestType } from 'interface'
 
 const SECRET = process.env.SECRET_TOKEN || ''
 

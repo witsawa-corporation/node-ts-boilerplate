@@ -1,10 +1,10 @@
 import { Request, Response, NextFunction } from 'express'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
-import { UserModel, UserType } from '../../models'
+import { UserModel, UserType } from 'models'
+import { RequestType } from 'interface'
+import { badRequest, unauthorized, errors } from 'lib/errorObj'
 import { createUserSchema, updateUserSchema, loginSchema } from './schema'
-import { RequestType } from './../../interface'
-import { badRequest, unauthorized, errors } from '../../lib/errorObj'
 
 const SECRET = process.env.SECRET_TOKEN || ''
 

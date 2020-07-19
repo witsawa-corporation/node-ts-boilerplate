@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import * as userServices from '../services/user'
+import * as userServices from 'services/user'
 
 const router = Router()
 
