@@ -1,21 +1,16 @@
 version: '3'
 services:
-  mssql:
-    # image: mcr.microsoft.com/mssql/server:latest
-    image: registry.gitlab.com/witsawa/ptt-top/mssql:v1
-    environment:
-      - ACCEPT_EULA=Y
-      - SA_PASSWORD=TOP1q2w3e4r!
+  mongo:
+    image: mongo:4
     ports:
-      - 1433:1433
+      - 27017:27017
 
   api:
-    image: node:8-alpine
+    image: node:12-alpine
     command: yarn start
     working_dir: /app
     volumes:
       - .:/app
-      - /var/tmp:/var/tmp
     ports:
       - "8080:8080"
       - "9229:9229"
