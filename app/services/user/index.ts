@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken'
 import { UserModel, UserType } from 'models'
 import { RequestType } from 'interface'
 import { badRequest, unauthorized, errors } from 'lib/errorObj'
-import { createUserSchema, updateUserSchema, loginSchema } from './schema'
+import { createUserSchema, updateUserSchema, loginSchema, querySchema } from './schema'
 
 const SECRET = process.env.SECRET_TOKEN || ''
 
@@ -56,8 +56,19 @@ export const create = async (req: Request, res: Response, next: NextFunction): P
 
 export const find = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const users = await UserModel.find({}, { password: false })
-    res.send(users)
+    const { value, error } = querySchema.validate(
+      { ...req.query, where: JSON.parse(req.query.where || '{}') },
+      { abortEarly: false },
+    )
+    if (error) {
+      return next(errors(error.name, error.message, 400))
+    }
+    const data = await UserModel.find(value.where || {}, { password: false })
+      .limit(value.limit)
+      .skip(value.skip)
+      .sort(value.sort)
+    const total = await UserModel.countDocuments(value.where || {})
+    res.send({ data, total })
   } catch (e) {
     next(e)
   }
