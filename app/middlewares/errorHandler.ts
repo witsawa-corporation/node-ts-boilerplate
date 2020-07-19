@@ -1,18 +1,18 @@
 import express from 'express'
+import { ErrorType } from '../interface'
 
 function errorHandler(
-  err: Error,
+  error: ErrorType,
   req: express.Request,
   res: express.Response,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   next: express.NextFunction,
 ): void {
-  const errMessage: string = err.message
-  const status: number = +errMessage.substring(0, 3) || 500
-  const messageTemp = errMessage.substring(5)
-  const message = messageTemp.split(',')[0]
+  const message: string = error.message
+  const name: string = error.name
+  const status: number = error.status || 500
   res.status(status)
-  res.send({ status, message })
+  res.send({ name, status, message })
 }
 
 export default errorHandler

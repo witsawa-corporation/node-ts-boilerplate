@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken'
 import { UserModel, UserType } from '../../models'
 import { createUserSchema, updateUserSchema, loginSchema } from './schema'
 import { RequestType } from './../../interface'
+import { badRequest, unauthorized, errors } from '../../lib/errorObj'
 
 const SECRET = process.env.SECRET_TOKEN || ''
 
@@ -25,7 +26,7 @@ export const userMe = async (
   try {
     if (req.params.id === 'me') {
       if (!req?.user?._id) {
-        return next(new Error(`400: INVALID_ID`))
+        return next(badRequest('INVALID_ID'))
       }
       req.params.id = req?.user?._id || ''
     }
@@ -37,9 +38,9 @@ export const userMe = async (
 
 export const create = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const { value, error } = createUserSchema.validate(req.body)
+    const { value, error } = createUserSchema.validate(req.body, { abortEarly: false })
     if (error) {
-      return next(new Error(`400: ${error}`))
+      return next(errors(error.name, error.message, 400))
     }
     const newUser = new UserModel({
       email: value.email,
@@ -79,7 +80,7 @@ export const updateById = async (
   try {
     const { value, error } = updateUserSchema.validate(req.body)
     if (error) {
-      return next(new Error(`400: ${error}`))
+      return next(errors(error.name, error.message, 400))
     }
     const result = await UserModel.findByIdAndUpdate(
       req.params.id,
@@ -109,15 +110,15 @@ export const login = async (req: Request, res: Response, next: NextFunction): Pr
   try {
     const { value, error } = loginSchema.validate(req.body)
     if (error) {
-      return next(new Error(`400: ${error}`))
+      return next(errors(error.name, error.message, 400))
     }
     const user: UserType | null = await UserModel.findOne({ email: value.email }).lean()
     if (!user) {
-      return next(new Error(`401: LOGIN_FAILED`))
+      return next(unauthorized('LOGIN_FAILED'))
     }
     const matchedPassword = comparePassword(value.password, user?.password || '')
     if (!matchedPassword) {
-      return next(new Error(`401: LOGIN_FAILED`))
+      return next(unauthorized('LOGIN_FAILED'))
     }
     user.password = undefined
     const token = jwt.sign(user, SECRET)

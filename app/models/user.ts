@@ -32,4 +32,12 @@ const schema = new Schema(
   },
 )
 
+schema.post('save', function(error: any, doc: any, next: (err?: Error) => void) {
+  if (error.name === 'MongoError' && error.code === 11000) {
+    next(new Error('USER_ALREADY_EXISTS'))
+  } else {
+    next()
+  }
+})
+
 export const UserModel = mongoose.model('User', schema)

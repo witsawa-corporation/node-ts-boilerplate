@@ -13,3 +13,7 @@ export interface RequestType extends Request {
   user?: UserData
   token?: string
 }
+
+export interface ErrorType extends Error {
+  status?: number
+}
