@@ -17,3 +17,9 @@ export interface RequestType extends Request {
 export interface ErrorType extends Error {
   status?: number
 }
+
+export type RoleResolverArgs = {
+  user?: UserData
+  token?: string
+}
+export type RoleResolverType = (args: RoleResolverArgs) => Promise<boolean>
