@@ -15,6 +15,10 @@ export const unauthorized = (message: string): ErrorType => {
   return errors('Unauthorized', message, 401)
 }
 
+export const forbidden = (message: string): ErrorType => {
+  return errors('Forbidden', message, 403)
+}
+
 export const notFound = (message: string): ErrorType => {
   return errors('Not Found', message, 404)
 }
