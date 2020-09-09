@@ -1,10 +1,13 @@
 import { Request, Response, NextFunction } from 'express'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
-import { UserModel, UserType } from 'models'
+import { getRepository, UpdateResult } from 'typeorm'
+import { User } from 'entity/User'
 import { RequestType } from 'interface'
 import { badRequest, unauthorized, errors } from 'lib/errorObj'
 import { createUserSchema, updateUserSchema, loginSchema, querySchema } from './schema'
+
+const UserModel = getRepository(User)
 
 const SECRET = process.env.SECRET_TOKEN || ''
 
@@ -42,12 +45,11 @@ export const create = async (req: Request, res: Response, next: NextFunction): P
     if (error) {
       return next(errors(error.name, error.message, 400))
     }
-    const newUser = new UserModel({
-      email: value.email,
-      username: value.username,
-      password: hashPassword(value.password),
-    })
-    const result = await newUser.save()
+    const newUser = new User()
+    newUser.email = value.email
+    newUser.username = value.username
+    newUser.password = hashPassword(value.password)
+    const result = await UserModel.save(newUser)
     res.send(result)
   } catch (e) {
     next(e)
@@ -63,11 +65,13 @@ export const find = async (req: Request, res: Response, next: NextFunction): Pro
     if (error) {
       return next(errors(error.name, error.message, 400))
     }
-    const data = await UserModel.find(value.where || {}, { password: false })
-      .limit(value.limit)
-      .skip(value.skip)
-      .sort(value.sort)
-    const total = await UserModel.countDocuments(value.where || {})
+    const [data, total] = await UserModel.findAndCount({
+      select: ['id', 'email', 'username'],
+      where: value.where || {},
+      skip: value.skip,
+      take: value.limit,
+      order: value.sort,
+    })
     res.send({ data, total })
   } catch (e) {
     next(e)
@@ -76,7 +80,9 @@ export const find = async (req: Request, res: Response, next: NextFunction): Pro
 
 export const findById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const user = await UserModel.findById(req.params.id, { password: false })
+    const user = await UserModel.findOne(req.params.id, {
+      select: ['id', 'email', 'username'],
+    })
     res.send(user)
   } catch (e) {
     next(e)
@@ -93,11 +99,8 @@ export const updateById = async (
     if (error) {
       return next(errors(error.name, error.message, 400))
     }
-    const result = await UserModel.findByIdAndUpdate(
-      req.params.id,
-      { $set: value },
-      { new: true, select: { password: false } },
-    )
+    const result: UpdateResult = await UserModel.update(req.params.id, value)
+    result.raw.password = undefined
     res.send(result)
   } catch (e) {
     next(e)
@@ -110,7 +113,7 @@ export const deleteById = async (
   next: NextFunction,
 ): Promise<void> => {
   try {
-    const result = await UserModel.findByIdAndRemove(req.params.id)
+    const result = await UserModel.softDelete(req.params.id)
     res.send(result)
   } catch (e) {
     next(e)
@@ -123,7 +126,7 @@ export const login = async (req: Request, res: Response, next: NextFunction): Pr
     if (error) {
       return next(errors(error.name, error.message, 400))
     }
-    const user: UserType | null = await UserModel.findOne({ email: value.email }).lean()
+    const user = await UserModel.findOne({ email: value.email })
     if (!user) {
       return next(unauthorized('LOGIN_FAILED'))
     }
@@ -131,7 +134,7 @@ export const login = async (req: Request, res: Response, next: NextFunction): Pr
     if (!matchedPassword) {
       return next(unauthorized('LOGIN_FAILED'))
     }
-    user.password = undefined
+    user.password = ''
     const token = jwt.sign(user, SECRET)
     res.send({ token })
   } catch (e) {

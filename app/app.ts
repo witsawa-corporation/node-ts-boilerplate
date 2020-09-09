@@ -6,6 +6,7 @@ import logErrors from 'middlewares/logErrors'
 import errorHandler from 'middlewares/errorHandler'
 import routes from 'routes'
 
+const port = process.env.PORT || 8080
 const app: express.Application = express()
 
 app.use(cors())
@@ -23,5 +24,9 @@ if (process.env.NODE_ENV !== 'test') {
   app.use(logErrors)
 }
 app.use(errorHandler)
+
+app.listen(port, function() {
+  console.log(`listening on port ${port}`)
+})
 
 export default app

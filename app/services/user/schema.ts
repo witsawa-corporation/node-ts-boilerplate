@@ -36,5 +36,8 @@ export const querySchema = Joi.object({
     email: Joi.string().optional(),
     username: Joi.string().optional(),
   }).optional(),
-  sort: Joi.string().optional(),
+  sort: Joi.object({
+    email: Joi.string().optional(),
+    username: Joi.string().optional(),
+  }).optional(),
 })
