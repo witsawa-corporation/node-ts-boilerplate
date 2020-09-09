@@ -28,10 +28,10 @@ export const userMe = async (
 ): Promise<void> => {
   try {
     if (req.params.id === 'me') {
-      if (!req?.user?._id) {
+      if (!req?.user?.id) {
         return next(badRequest('INVALID_ID'))
       }
-      req.params.id = req?.user?._id || ''
+      req.params.id = req?.user?.id || ''
     }
     next()
   } catch (e) {
@@ -66,7 +66,7 @@ export const find = async (req: Request, res: Response, next: NextFunction): Pro
       return next(errors(error.name, error.message, 400))
     }
     const [data, total] = await UserModel.findAndCount({
-      select: ['id', 'email', 'username'],
+      select: ['id', 'email', 'username', 'createdAt', 'updatedAt'],
       where: value.where || {},
       skip: value.skip,
       take: value.limit,
@@ -81,7 +81,7 @@ export const find = async (req: Request, res: Response, next: NextFunction): Pro
 export const findById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const user = await UserModel.findOne(req.params.id, {
-      select: ['id', 'email', 'username'],
+      select: ['id', 'email', 'username', 'createdAt', 'updatedAt'],
     })
     res.send(user)
   } catch (e) {
@@ -100,25 +100,30 @@ export const updateById = async (
       return next(errors(error.name, error.message, 400))
     }
     const result: UpdateResult = await UserModel.update(req.params.id, value)
-    result.raw.password = undefined
-    res.send(result)
+    if (result.affected === 0) {
+      return next(badRequest('UPDATE_FAILED'))
+    }
+    const user = await UserModel.findOne(req.params.id, {
+      select: ['id', 'email', 'username', 'createdAt', 'updatedAt'],
+    })
+    res.send(user)
   } catch (e) {
     next(e)
   }
 }
 
-export const deleteById = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-): Promise<void> => {
-  try {
-    const result = await UserModel.softDelete(req.params.id)
-    res.send(result)
-  } catch (e) {
-    next(e)
-  }
-}
+// export const deleteById = async (
+//   req: Request,
+//   res: Response,
+//   next: NextFunction,
+// ): Promise<void> => {
+//   try {
+//     const result = await UserModel.softDelete(req.params.id)
+//     res.send(result)
+//   } catch (e) {
+//     next(e)
+//   }
+// }
 
 export const login = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
@@ -134,8 +139,11 @@ export const login = async (req: Request, res: Response, next: NextFunction): Pr
     if (!matchedPassword) {
       return next(unauthorized('LOGIN_FAILED'))
     }
-    user.password = ''
-    const token = jwt.sign(user, SECRET)
+    const payload = {
+      id: user.id,
+      username: user.username,
+    }
+    const token = jwt.sign(payload, SECRET)
     res.send({ token })
   } catch (e) {
     next(e)

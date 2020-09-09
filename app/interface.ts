@@ -1,7 +1,7 @@
 import { Request } from 'express'
 
 export interface UserData {
-  _id?: string
+  id?: string
   email?: string
   username?: string
   createdAt?: string

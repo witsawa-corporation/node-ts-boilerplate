@@ -9,7 +9,7 @@ router.post('/', userServices.create)
 router.get('/', auth([authentication]), userServices.find)
 router.get('/:id', userServices.userMe, userServices.findById)
 router.patch('/:id', userServices.userMe, userServices.updateById)
-router.delete('/:id', userServices.deleteById)
+// router.delete('/:id', userServices.deleteById)
 router.post('/login', userServices.login)
 
 export default router
