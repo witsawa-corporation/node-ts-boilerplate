@@ -6,8 +6,8 @@ const SECRET = process.env.SECRET_TOKEN || ''
 
 function authentication(req: RequestType, res: Response, next: NextFunction): void {
   let token
-  if (req.get('X-Access-Token')) {
-    token = req.get('X-Access-Token')
+  if (req.get('Authorization')) {
+    token = req.get('Authorization')
   }
   if (token) {
     req.token = token

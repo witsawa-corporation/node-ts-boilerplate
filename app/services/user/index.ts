@@ -11,12 +11,6 @@ const UserModel = getRepository(User)
 
 const SECRET = process.env.SECRET_TOKEN || ''
 
-const hashPassword = (password: string): string => {
-  const salt = bcrypt.genSaltSync(10)
-  const hash = bcrypt.hashSync(password, salt)
-  return hash
-}
-
 const comparePassword = (password: string, hash: string): boolean => {
   return bcrypt.compareSync(password, hash)
 }
@@ -48,7 +42,7 @@ export const create = async (req: Request, res: Response, next: NextFunction): P
     const newUser = new User()
     newUser.email = value.email
     newUser.username = value.username
-    newUser.password = hashPassword(value.password)
+    newUser.password = value.password
     const result = await UserModel.save(newUser)
     res.send(result)
   } catch (e) {
@@ -112,35 +106,23 @@ export const updateById = async (
   }
 }
 
-// export const deleteById = async (
-//   req: Request,
-//   res: Response,
-//   next: NextFunction,
-// ): Promise<void> => {
-//   try {
-//     const result = await UserModel.softDelete(req.params.id)
-//     res.send(result)
-//   } catch (e) {
-//     next(e)
-//   }
-// }
-
 export const login = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { value, error } = loginSchema.validate(req.body)
     if (error) {
       return next(errors(error.name, error.message, 400))
     }
-    const user = await UserModel.findOne({ email: value.email })
+    const user = await UserModel.findOne({ email: value.email }, { select: ['id', 'email', 'username', 'password'] })
     if (!user) {
       return next(unauthorized('LOGIN_FAILED'))
     }
-    const matchedPassword = comparePassword(value.password, user?.password || '')
+    const matchedPassword = comparePassword(value.password, user.password)
     if (!matchedPassword) {
       return next(unauthorized('LOGIN_FAILED'))
     }
     const payload = {
       id: user.id,
+      email: user.email,
       username: user.username,
     }
     const token = jwt.sign(payload, SECRET)
