@@ -5,6 +5,8 @@ import authentication from 'middlewares/authentication'
 import logErrors from 'middlewares/logErrors'
 import errorHandler from 'middlewares/errorHandler'
 import routes from 'routes'
+import swaggerUi from 'swagger-ui-express'
+import * as swaggerDocument from './swagger.json'
 
 const port = process.env.PORT || 8080
 const app: express.Application = express()
@@ -19,6 +21,7 @@ app.get('/', function(req, res) {
     nodeEnv: process.env.NODE_ENV,
   })
 })
+app.use('/explorer', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 app.use('/api', routes)
 if (process.env.NODE_ENV !== 'test') {
   app.use(logErrors)

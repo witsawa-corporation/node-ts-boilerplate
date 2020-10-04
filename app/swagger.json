@@ -1,0 +1,98 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "node-ts-boilerplate",
+    "description": "node typescript document",
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "paths": {
+    "/cats": {
+      "get": {
+        "tags": [
+          "Cats"
+        ],
+        "summary": "Get all cats in system",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Cats"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Cats"
+        ],
+        "summary": "Create a new cat in system",
+        "requestBody": {
+          "description": "Cat Object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/definitions/Cat"
+              }
+            }
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/id"
+            }
+          },
+          "400": {
+            "description": "Failed. Bad post data."
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "id": {
+      "properties": {
+        "uuid": {
+          "type": "string"
+        }
+      }
+    },
+    "Cat": {
+      "type": "object",
+      "properties": {
+        "genus": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "isHungry": {
+          "type": "boolean"
+        },
+        "lastFedDate": {
+          "type": "string"
+        }
+      }
+    },
+    "Cats": {
+      "type": "object",
+      "properties": {
+        "cats": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/Cat"
+          }
+        }
+      }
+    }
+  }
+}
