@@ -8,14 +8,18 @@ export const createUserSchema = Joi.object({
     .required(),
   username: Joi.string()
     .lowercase()
+    .min(3)
     .trim()
     .required(),
-  password: Joi.string().required(),
+  password: Joi.string()
+    .min(8)
+    .required(),
 })
 
 export const updateUserSchema = Joi.object({
   username: Joi.string()
     .lowercase()
+    .min(3)
     .trim()
     .required(),
 })
@@ -36,5 +40,8 @@ export const querySchema = Joi.object({
     email: Joi.string().optional(),
     username: Joi.string().optional(),
   }).optional(),
-  sort: Joi.string().optional(),
+  sort: Joi.object({
+    email: Joi.string().optional(),
+    username: Joi.string().optional(),
+  }).optional(),
 })
