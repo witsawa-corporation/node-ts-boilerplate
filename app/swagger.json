@@ -9,89 +9,109 @@
       "url": "https://opensource.org/licenses/MIT"
     }
   },
+  "servers": [
+    {"url": "http://localhost:8080/api", "description": "base URL"}
+  ],
+  "tags": [
+    {
+      "name": "User",
+      "description": "User Account"
+    },
+    {
+      "name": "Task",
+      "description": "Task of user"
+    }
+  ],
   "paths": {
-    "/cats": {
-      "get": {
-        "tags": [
-          "Cats"
-        ],
-        "summary": "Get all cats in system",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/Cats"
-            }
-          }
-        }
-      },
+    "/users": {
       "post": {
-        "tags": [
-          "Cats"
-        ],
-        "summary": "Create a new cat in system",
+        "tags": ["User"],
         "requestBody": {
-          "description": "Cat Object",
-          "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/definitions/Cat"
+                "$ref": "#/components/schemas/User"
               }
             }
           }
         },
-        "produces": [
-          "application/json"
-        ],
         "responses": {
           "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/id"
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
             }
-          },
-          "400": {
-            "description": "Failed. Bad post data."
+          }
+        }
+      },
+      "get": {
+        "tags": ["User"],
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              }
+            }
           }
         }
       }
     }
   },
-  "definitions": {
-    "id": {
-      "properties": {
-        "uuid": {
-          "type": "string"
-        }
-      }
-    },
-    "Cat": {
-      "type": "object",
-      "properties": {
-        "genus": {
-          "type": "string"
-        },
-        "name": {
-          "type": "string"
-        },
-        "isHungry": {
-          "type": "boolean"
-        },
-        "lastFedDate": {
-          "type": "string"
-        }
-      }
-    },
-    "Cats": {
-      "type": "object",
-      "properties": {
-        "cats": {
-          "type": "object",
-          "additionalProperties": {
-            "$ref": "#/definitions/Cat"
+  "components": {
+    "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "username": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
           }
         }
+      },
+      "Task": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "detail": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "auth": {
+        "type": "http",
+        "scheme": "bearer"
       }
     }
   }

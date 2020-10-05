@@ -21,7 +21,10 @@ app.get('/', function(req, res) {
     nodeEnv: process.env.NODE_ENV,
   })
 })
-app.use('/explorer', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
+const options = {
+  // explorer: true,
+}
+app.use('/explorer', swaggerUi.serve, swaggerUi.setup(swaggerDocument, options))
 app.use('/api', routes)
 if (process.env.NODE_ENV !== 'test') {
   app.use(logErrors)
