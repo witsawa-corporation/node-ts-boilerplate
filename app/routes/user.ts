@@ -6,28 +6,47 @@ import { authentication } from 'roleResolvers'
 const router = Router()
 
 /**
- * @swagger
- *
- * /api/users:
- *   post:
- *     description: Creates a user
- *     produces:
- *       - application/json
- *     parameters:
- *       - name: user
- *         description: User object
- *         in:  body
- *         required: true
- *         type: string
- *     responses:
- *       200:
- *         description: users
+ * Generate your Swagger spec by documenting your routes:
+ * https://swagger.io/specification/
+ * https://jsdoc.app/
+ * https://github.com/Surnet/swagger-jsdoc/blob/master/docs/GETTING-STARTED.md
  */
+
+/**
+ * @swagger
+ *  /api/users:
+ *     post:
+ *       description: Creates a user
+ *       produces:
+ *         - application/json
+ *       parameters:
+ *         - name: body
+ *           description: new user attributes
+ *           in:  body
+ *           required: true
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *               username:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *       responses:
+ *         200:
+ *           description: Created user
+ * */
 router.post('/', userServices.create)
+
 router.get('/', auth([authentication]), userServices.find)
+
 router.get('/:id', userServices.userMe, userServices.findById)
+
 router.patch('/:id', userServices.userMe, userServices.updateById)
+
 // router.delete('/:id', userServices.deleteById)
+
 router.post('/login', userServices.login)
 
 export default router
