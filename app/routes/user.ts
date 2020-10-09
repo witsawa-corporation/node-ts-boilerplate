@@ -19,6 +19,8 @@ const router = Router()
  *       description: Creates a user
  *       produces:
  *         - application/json
+ *       tags:
+ *          - User Routes
  *       parameters:
  *         - name: body
  *           description: new user attributes
