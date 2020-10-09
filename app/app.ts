@@ -22,9 +22,7 @@ const swaggerSpec = SwaggerJSDoc({
       servers: [`http://localhost:${port}`],
     },
   },
-
-  /* Can also configure wildcards within dirs (eg /routes/*.ts) */
-  apis: ['/build/**/*.js'],
+  apis: ['**/*.ts'],
 })
 
 app.use(cors())
