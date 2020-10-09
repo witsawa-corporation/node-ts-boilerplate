@@ -29,7 +29,7 @@ app.use(cors())
 app.use(express.json())
 app.use(authentication)
 
-app.use('/documentation', SwaggerUI.serve, SwaggerUI.setup(swaggerSpec))
+app.use('/documentation', SwaggerUI.serve, SwaggerUI.setup(swaggerSpec, { explorer: true }))
 app.get('/', function(req, res) {
   res.send({
     title: 'Welcome to server',
