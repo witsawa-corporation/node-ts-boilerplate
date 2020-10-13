@@ -29,6 +29,8 @@
     "mongoose-delete": "^0.5.2",
     "pg": "^8.3.3",
     "reflect-metadata": "^0.1.13",
+    "swagger-jsdoc": "^4.2.0",
+    "swagger-ui-express": "^4.1.4",
     "typeorm": "^0.2.25"
   },
   "devDependencies": {
